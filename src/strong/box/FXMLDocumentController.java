@@ -33,12 +33,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML private TextField key;
     @FXML private ChoiceBox method = new ChoiceBox();
     
-    ObservableList<String> options = 
+    ObservableList<String> available_methods = 
     FXCollections.observableArrayList(
-        "Option 1",
-        "Option 2",
-        "Option 3"
-    );
+        "AES (128)",
+        "DES (56)",
+        "DESede (168)",
+        "RSA (1024)"
+     );
     
     public FXMLDocumentController() {
         
@@ -87,8 +88,10 @@ public class FXMLDocumentController implements Initializable {
     
     private void startProcess(File input, String key, boolean mode) {
         
-        File encryptedFile = new File("text.encrypted");
-        File decryptedFile = new File("decrypted-text.txt");
+        System.out.println(input.toPath().toString());
+        
+        File encryptedFile = new File(input.toPath().toString() + ".enc") ;
+        File decryptedFile = new File(input.toPath().toString() + ".dec");
         comboBoxwasUpdated();
 
         try {
@@ -113,7 +116,7 @@ public class FXMLDocumentController implements Initializable {
     // Function gets called at GUI start
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    method.setItems(options);
+    method.setItems(available_methods);
          
     }    
     
