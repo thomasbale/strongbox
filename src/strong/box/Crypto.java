@@ -29,8 +29,10 @@ public class Crypto {
 	 try {
 	       Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
 	       Cipher cipher = Cipher.getInstance("AES");
+               Randompass keyr = new Randompass();
+               keyr.generateToken(16);
+               
 	       cipher.init(cipherMode, secretKey);
-
 	       FileInputStream inputStream = new FileInputStream(inputFile);
 	       byte[] inputBytes = new byte[(int) inputFile.length()];
 	       inputStream.read(inputBytes);
