@@ -6,6 +6,8 @@
 package strong.box;
 
 import java.net.URL;
+import java.util.*;
+import java.lang.*;
 import java.util.concurrent.TimeUnit;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -29,6 +31,7 @@ public class FXMLDocumentController implements Initializable {
     File selectedFile;
     //  Holds session state data
     State session = new State();
+    unitIntegrityTest secure = new unitIntegrityTest();
             
     @FXML private Label status;
     @FXML private Label instruction;
@@ -126,11 +129,15 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     
     // Start a new state to hold the encryption task details
-    session.init();
-    method.setItems(available_methods);
-    //  Set a defult method
-    method.getSelectionModel().selectFirst();
-         
+    // Perform security checks prior to launching
+    if (secure.greenLight()){
+        session.init();
+        method.setItems(available_methods);
+        //  Set a defult method
+        method.getSelectionModel().selectFirst();
+    }else{
+        System.out.print("Security exception program aborted");
+        System.exit(0);
     }    
-    
+    }     
 }

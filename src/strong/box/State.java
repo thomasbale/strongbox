@@ -18,12 +18,14 @@ public class State {
     //  Encryption method
     private String method = "DES";
     //  Secret key/seed
-    private String key;
+    private String key = "nokey";
     // key length based on method
-    private int keylength;
+    private int keylength = 0;
     
     public void init(){
-        System.out.print(method);
+        System.out.print("Initialised session with method: " + method + "...\n");
+        System.out.print("Initialised session with default key: " + key + "...\n");
+        System.out.print("Initialised session with keylength: " + keylength + "...\n");
     }
     
     public void method(String method){
