@@ -39,7 +39,7 @@ public class State {
         System.out.print("Initialised session with keylength: " + keylength + "...\n");
     }
     
-    public Boolean setInput(Boolean encryption, File input){
+    public Boolean setInput(int mode, File input){
         // set mode/ set encryption/dec
         // set method
         // set input
@@ -48,7 +48,7 @@ public class State {
         // set keylen
         // set ready - return true
         this.input = input;
-        this.setMode(encryption);
+        cipherMode = mode;
         this.flush();
         
         System.out.print("UPDATED: ...\n");
@@ -92,10 +92,12 @@ public class State {
     }
     
     public void flush (){
-        if(this.encryption = false){
-           this.cipherMode = DECRYPT_MODE;
+        if(cipherMode == DECRYPT_MODE){
            System.out.print("Decrypt mode enabled...\n");
+           System.out.print("Target set to ...\n" + target.toPath().toString());
            this.target = new File(input.toPath().toString() + ".dec");
+           System.out.print("Target set to ...\n" + target.toPath().toString());
+           this.setKeylength();
            return;
         }
         this.target = new File(input.toPath().toString() + ".enc");
@@ -114,12 +116,17 @@ public class State {
     private void setKeylength(){
         
       switch(method){
-      case  "DES" : this.keylength = 7;
-      case  "AES" : this.keylength = 16;
-      case  "DESede" : this.keylength = 18;
-      case  "RSA" : this.keylength = 18;
+      case  "DES" : this.keylength = 7;break;
+      case  "AES" : this.keylength = 16;break;
+      case  "DESede" : this.keylength = 18;break;
+      case  "RSA" : this.keylength = 18;break;
       default : this.keylength = 7;
     }
+    }
+      
+    public void setKey(String key){
+          this.key = key;
+      }
         
-   }
+
 }

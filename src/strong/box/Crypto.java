@@ -30,19 +30,20 @@ public class Crypto {
    static void fileProcessor(State session){
 	 try {
              
-               //Randompass keyr = new Randompass();
- 
-               //int cipherMode = session.cipherMode();
+               Randompass keyr = new Randompass();
+    
+               session.setKey(keyr.generateToken(session.keylen()));
+               int cipherMode = session.cipherMode();
                //String key = "This is a secret";
               // File inputFile = session.getInput();
-               //File outputFile = session.getTarget();
+               File outputFile = session.getTarget();
                
                //byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
                //IvParameterSpec ivspec = new IvParameterSpec(iv);
                
-              int cipherMode = Cipher.ENCRYPT_MODE;
+              //int cipherMode = Cipher.ENCRYPT_MODE;
               File inputFile = session.getInput();
-              File outputFile = new File(session.getInput().toPath().toString() + ".dec");
+              //File outputFile = new File(session.getInput().toPath().toString() + ".dec");
               String key = "This is a secret";
              
                       

@@ -23,6 +23,8 @@ import javafx.scene.control.Alert.AlertType;
 import javax.crypto.Cipher;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Popup;
+import static javax.crypto.Cipher.DECRYPT_MODE;
+import static javax.crypto.Cipher.ENCRYPT_MODE;
 
 /**
  * This class controls the application layer (model) sitting behind the GUI
@@ -81,9 +83,10 @@ public class FXMLDocumentController implements Initializable {
         
         if(selectedFile == null){
             this.showInformation("Error", "Please select a file");
+            return;
         }
-
-        startProcess(selectedFile,true);
+        startProcess(selectedFile,ENCRYPT_MODE);
+        
         try{
             TimeUnit.SECONDS.sleep(1);
             key.setText(session.getKey());
@@ -96,11 +99,10 @@ public class FXMLDocumentController implements Initializable {
         
         if(selectedFile == null){
             this.showInformation("Error", "Please select a file");
+            return;
         }
         
-        startProcess(selectedFile,false);
-        
-        
+        startProcess(selectedFile,DECRYPT_MODE);
         
         try{
             TimeUnit.SECONDS.sleep(1);
@@ -111,11 +113,11 @@ public class FXMLDocumentController implements Initializable {
         status.setText(key.getText());
     }
     
-    private void startProcess(File input, boolean mode) {
+    private void startProcess(File input, int mode) {
         
-       // System.out.println(input.toPath().toString());
-       
-        //session.setMode(mode);
+        this.extractMethod(method.getValue().toString());
+        
+        System.out.println(input.toPath().toString());
         session.setInput(mode, input);
         comboBoxwasUpdated();
 
@@ -128,6 +130,16 @@ public class FXMLDocumentController implements Initializable {
           System.out.println(ex.getMessage());
         }     
  }
+    
+    private void extractMethod(String method){
+      switch(method){
+      case  "Low: DES (56)" : session.method("DES");break;
+      case  "Medium: AES (128)" : session.method("AES");break;
+      case  "High: DESede (168)" : session.method("DESede");break;
+      case  "Extreme: RSA (1024)" : session.method("RSA");break;
+      default : session.method("AES");
+    }
+    }
     
     //This wil update the combobox when the combobox is changed
     public void comboBoxwasUpdated(){
