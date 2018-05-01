@@ -61,6 +61,10 @@ public class State {
         return true;
     }
     
+    public Boolean isReady(){
+        return ready;
+    }
+    
     public int keylen(){
         return keylength;
     }

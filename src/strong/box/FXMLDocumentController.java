@@ -122,8 +122,16 @@ public class FXMLDocumentController implements Initializable {
         comboBoxwasUpdated();
 
         try {
-            Crypto.fileProcessor(session);
-            System.out.println("Success");
+            if(Crypto.fileProcessor(session)){
+                System.out.println("Success");
+                this.showInformation("Process complete", "success");
+            }
+            
+            else{
+                System.out.println("Failure");
+                this.showInformation("Process complete", "failure");
+            }
+    
             }
          
         catch (Exception ex) {

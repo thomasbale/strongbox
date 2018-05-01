@@ -27,7 +27,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
 
-   static void fileProcessor(State session){
+   static Boolean fileProcessor(State session){
+       
+       if(session.isReady()==false){
+           System.out.print("session not ready abort");
+           return false;
+       }
+       
 	 try {
              
                Randompass keyr = new Randompass();
@@ -65,12 +71,15 @@ public class Crypto {
 
 	       inputStream.close();
 	       outputStream.close();
+               
+        
 
 	    } catch (/*InvalidAlgorithmParameterException | */NoSuchPaddingException | NoSuchAlgorithmException
                      | InvalidKeyException | BadPaddingException
 	             | IllegalBlockSizeException | IOException e) {
 		e.printStackTrace();
             }
+         return true;
      }
 
 
