@@ -6,7 +6,6 @@
 package strong.box;
 
 import java.net.URL;
-import java.util.*;
 import java.lang.*;
 import java.util.concurrent.TimeUnit;
 import java.util.ResourceBundle;
@@ -19,8 +18,11 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javax.crypto.Cipher;
 import javafx.scene.control.ChoiceBox;
+import javafx.stage.Popup;
 
 /**
  * This class controls the application layer (model) sitting behind the GUI
@@ -38,6 +40,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private Label key;
     @FXML private TextField password;
     @FXML private ChoiceBox method = new ChoiceBox();
+    @FXML private Popup securitywarn = new Popup();
     
     ObservableList<String> available_methods = 
     FXCollections.observableArrayList(
@@ -61,24 +64,29 @@ public class FXMLDocumentController implements Initializable {
         //  Handle cases where the user aborts or the process fails
         if (selectedFile != null) {
             System.out.println("File requested and selected");
-
+                // Assign file to current session
                 status.setText("File selected: " + selectedFile.getName());
-                
             }
             else {
             System.out.println("File requested and cancelled");
                 status.setText("File selection cancelled.");
             }
+               if(secure.restrictedCryptography()){
+            this.showSecuritywarning("JRE encrytion level limited");
+        }
     }
     
     @FXML
     private void encryptFile(ActionEvent event) {
         
-        String crypt = "This is a secret";
-        key.setText(crypt);
-        startProcess(selectedFile, crypt,true);
+        if(selectedFile == null){
+            this.showInformation("Error", "Please select a file");
+        }
+
+        startProcess(selectedFile,true);
         try{
             TimeUnit.SECONDS.sleep(1);
+            key.setText(session.getKey());
         } catch(InterruptedException e){}
         status.setText("Encryption complete " );
     }
@@ -86,32 +94,36 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void decryptFile(ActionEvent event) {
         
-        String key1 = "This is a secret";
-        startProcess(selectedFile, key1,false);
+        if(selectedFile == null){
+            this.showInformation("Error", "Please select a file");
+        }
+        
+        startProcess(selectedFile,false);
+        
+        
+        
         try{
             TimeUnit.SECONDS.sleep(1);
+            key.setText(session.getKey());
+            
         } catch(InterruptedException e){};
         status.setText("Decryption complete " );
         status.setText(key.getText());
     }
     
-    private void startProcess(File input, String key, boolean mode) {
+    private void startProcess(File input, boolean mode) {
         
-        System.out.println(input.toPath().toString());
-        
-        File encryptedFile = new File(input.toPath().toString() + ".enc") ;
-        File decryptedFile = new File(input.toPath().toString() + ".dec");
+       // System.out.println(input.toPath().toString());
+       
+        //session.setMode(mode);
+        session.setInput(mode, input);
         comboBoxwasUpdated();
 
         try {
-            if(mode = true){
-                Crypto.fileProcessor(Cipher.ENCRYPT_MODE,key,input,encryptedFile);
-            }else{
-                Crypto.fileProcessor(Cipher.DECRYPT_MODE,key,encryptedFile,decryptedFile);
+            Crypto.fileProcessor(session);
+            System.out.println("Success");
             }
-          System.out.println("Success");
-        }
-
+         
         catch (Exception ex) {
           System.out.println(ex.getMessage());
         }     
@@ -122,6 +134,26 @@ public class FXMLDocumentController implements Initializable {
        this.instruction.setText(method.getValue().toString());
        session.method(method.getValue().toString());
   
+    }
+    
+    private void showSecuritywarning(String message){
+    //  This warns users that their JRE doesn't support full RSA encryption above 128 and that algorithms will be truncated 
+    Alert alert = new Alert(AlertType.WARNING);
+    alert.setTitle("Strongbox warning");
+    alert.setHeaderText("Security Alert");
+    alert.setContentText(message);
+    alert.show();
+    
+    }
+    
+        private void showInformation(String title, String message){
+    //  This warns users that their JRE doesn't support full RSA encryption above 128 and that algorithms will be truncated 
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle("Strongbox");
+    alert.setHeaderText(title);
+    alert.setContentText(message);
+    alert.show();
+    
     }
     
     // Function gets called at GUI start
@@ -135,8 +167,10 @@ public class FXMLDocumentController implements Initializable {
         method.setItems(available_methods);
         //  Set a defult method
         method.getSelectionModel().selectFirst();
+        // Warn if restricted crypto present
+        
     }else{
-        System.out.print("Security exception program aborted");
+        System.out.print("Fatal:Security exception program aborted");
         System.exit(0);
     }    
     }     
