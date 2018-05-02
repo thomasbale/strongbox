@@ -18,11 +18,11 @@ Java based graphical application for simple document encryption
 * Random password generator to match method level
 * Session based to ensure machine can be cleaned
 * Keylength based on encryption method Choice
-* Can reach RSA 1068 file encryption standard (if JRE supports)
+* Can reach RSA 1024 file encryption standard (if JRE supports)
 * Unit testing built in on applicaiton launch to validate ciphers and test sessions
 
 
-#Implementation stages
+# Implementation notes
 
 ## 1. Backend development
 
