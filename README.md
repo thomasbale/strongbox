@@ -1,4 +1,5 @@
-[logo]: https://github.com/thomasbale/strongbox/blob/master/images/Strongbox_logo.png
+
+![alt text](strongbox/images/Strongbox_logo.png)
 
 # strongbox
 Java based graphical application for simple document encryption
