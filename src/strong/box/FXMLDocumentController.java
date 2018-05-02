@@ -19,7 +19,6 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import static java.lang.System.out;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -241,7 +240,6 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void showSecuritywarning(String message){
-    //  This warns users that their JRE doesn't support full RSA encryption above 128 and that algorithms will be truncated 
     Alert alert = new Alert(AlertType.WARNING);
     alert.setTitle("Strongbox");
     alert.setHeaderText("Security Alert");
