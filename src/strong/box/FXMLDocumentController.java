@@ -5,6 +5,7 @@
  */
 package strong.box;
 
+import java.io.BufferedWriter;
 import java.net.URL;
 import java.lang.*;
 import java.util.concurrent.TimeUnit;
@@ -16,11 +17,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import static java.lang.System.out;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javax.crypto.Cipher;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Popup;
 import static javax.crypto.Cipher.DECRYPT_MODE;
@@ -33,6 +36,7 @@ import static javax.crypto.Cipher.ENCRYPT_MODE;
 public class FXMLDocumentController implements Initializable {
     //  Selected file needs to be visible to whole of controller
     File selectedFile;
+    File savedkey;
     //  Holds session state data
     State session = new State();
     unitIntegrityTest secure = new unitIntegrityTest();
@@ -74,18 +78,74 @@ public class FXMLDocumentController implements Initializable {
                 status.setText("File selection cancelled.");
             }
                if(secure.restrictedCryptography()){
-            this.showSecuritywarning("JRE encrytion level limited");
+            this.showSecuritywarning("Encrytion level limited (128). If stronger algorithms are needed (for example, AES with 256-bit keys), the JCE Unlimited Strength Jurisdiction Policy Files must be obtained and installed in the JDK/JRE.\n" +
+"\n" +
+"It is the user's responsibility to verify that this action is permissible under local regulations.");
         }
     }
     
     @FXML
+    private void handleKeydownload(ActionEvent event) {
+         
+        System.out.println("Key download requested...");
+        
+        if(!session.isReady()){
+            this.showInformation("Error", "You must encrypt something to generate a key");
+            return;
+        }
+        
+        FileChooser fileChooser = new FileChooser();
+        //  Launches a dialogue window to the main scene
+        savedkey = fileChooser.showSaveDialog(null);
+        //  Handle cases where the user aborts or the process fails
+        if (savedkey != null) {
+            System.out.println("KD requested and selected");
+                // Assign file to current session
+                //status.setText("File selected: " + selectedFile.getName());
+                this.saveKey();
+            }
+            else {
+            System.out.println("KD requested and cancelled");
+                status.setText("Key download selection cancelled.");
+            }
+    }
+    
+    private void saveKey(){
+        if(savedkey == null){
+            return;
+        }
+        
+        try{
+            FileWriter target = new FileWriter(savedkey.toPath().toString() + ".txt");
+            BufferedWriter output = new BufferedWriter(target);
+            output.write("Encryption key:\n" + session.getKey());      
+            output.close();
+            
+        }catch(IOException e){
+            System.out.println("Exception saving key!");
+            this.showSecuritywarning("Error saving cipher key! Try re-encrypting.");
+        }
+        
+        session.reset();
+        assert session.getKey() == null;
+        this.initInstructions();
+        this.showSecuritywarning("Key saved " +savedkey.toPath().toString() +".txt"+ "\n All local keys now cleared and ciphers reset.");
+        return;
+        }
+        
+    
+    
+    @FXML
     private void encryptFile(ActionEvent event) {
+        Randompass keyr = new Randompass();
         
         if(selectedFile == null){
             this.showInformation("Error", "Please select a file");
             return;
         }
         session.reset();
+        session.setKey(keyr.generateToken(session.keylen()));
+        
         startProcess(selectedFile,ENCRYPT_MODE);
         try{
             TimeUnit.SECONDS.sleep(1);
@@ -96,12 +156,13 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void decryptFile(ActionEvent event) {
-        
+        Randompass keyr = new Randompass();
         if(selectedFile == null){
             this.showInformation("Error", "Please select a file");
             return;
         }
         session.reset();
+        session.setKey(this.getPassword());
         startProcess(selectedFile,DECRYPT_MODE);
         
         try{
@@ -110,7 +171,7 @@ public class FXMLDocumentController implements Initializable {
             
         } catch(InterruptedException e){};
         status.setText("Decryption complete " );
-        status.setText(key.getText());
+        //status.setText(key.getText());
     }
     
     private void startProcess(File input, int mode) {
@@ -124,13 +185,14 @@ public class FXMLDocumentController implements Initializable {
         try {
             if(Crypto.fileProcessor(session)){
                 System.out.println("Success");
-                this.showInformation(session.direction() + " complete \n", "Success " + selectedFile.getName() + " saved with level: " + method.getValue().toString());
-                
+                this.showInformation(session.direction() + " complete \n", "Success " + selectedFile.getName() + session.direction() + " with level: " + method.getValue().toString());
+                instruction.setText("Completed " + session.direction() +" of " + selectedFile.getName());
             }
             
             else{
                 System.out.println("Failure");
                 this.showInformation(session.direction() + " complete", "failure");
+                instruction.setText("Unable to complete " + session.direction() +"of " + selectedFile.getName());
             }
             }
          
@@ -138,6 +200,15 @@ public class FXMLDocumentController implements Initializable {
           System.out.println(ex.getMessage());
         }     
  }
+    @FXML
+    private void Reset(ActionEvent event){
+        session.reset();
+        assert session.getKey() == null;
+        this.initInstructions();
+        this.showSecuritywarning("All keys cleared and ciphers reset");
+        return;
+    }
+
     
     private void extractMethod(String method){
       switch(method){
@@ -149,9 +220,12 @@ public class FXMLDocumentController implements Initializable {
     }
     }
     
+    private String getPassword(){
+        return password.getText();
+    }
+    
     //This wil update the combobox when the combobox is changed
     public void comboBoxwasUpdated(){
-       this.instruction.setText(method.getValue().toString());
        session.method(method.getValue().toString());
   
     }
@@ -166,7 +240,7 @@ public class FXMLDocumentController implements Initializable {
     
     }
     
-        private void showInformation(String title, String message){
+    private void showInformation(String title, String message){
     //  This warns users that their JRE doesn't support full RSA encryption above 128 and that algorithms will be truncated 
     Alert alert = new Alert(AlertType.INFORMATION);
     alert.setTitle("Strongbox");
@@ -174,6 +248,13 @@ public class FXMLDocumentController implements Initializable {
     alert.setContentText(message);
     alert.show();
     
+    }
+    
+    private void initInstructions(){
+        status.setText("File: " );
+        instruction.setText("Select file and method" );
+        key.setText("");
+        password.setText("");
     }
     
     // Function gets called at GUI start
@@ -184,6 +265,7 @@ public class FXMLDocumentController implements Initializable {
     // Perform security checks prior to launching
     if (secure.greenLight()){
         session.init();
+        this.initInstructions();
         method.setItems(available_methods);
         //  Set a defult method
         method.getSelectionModel().selectFirst();

@@ -14,16 +14,20 @@
       <Button layoutX="236.0" layoutY="213.0" mnemonicParsing="false" onAction="#decryptFile" text="Decrypt" />
       <Label fx:id="status" layoutX="26.0" layoutY="82.0" minHeight="16" minWidth="69" prefHeight="38.0" prefWidth="192.0" text="Status" />
       <Text layoutX="32.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Method" />
-        <Label fx:id="instruction" layoutX="127.0" layoutY="424.0" minHeight="16" minWidth="69" text="Instruction -&gt;" />
+        <Label fx:id="instruction" layoutX="14.0" layoutY="579.0" minHeight="16" minWidth="69" prefHeight="16.0" prefWidth="310.0">
+         <font>
+            <Font size="11.0" />
+         </font></Label>
       <Button layoutX="237.0" layoutY="87.0" mnemonicParsing="false" onAction="#handleUploadedFile" prefHeight="27.0" prefWidth="66.0" text="File" />
       <ChoiceBox fx:id="method" accessibleText="Method" layoutX="27.0" layoutY="173.0" onDragDetected="#comboBoxwasUpdated" onDragDone="#comboBoxwasUpdated" prefHeight="27.0" prefWidth="200.0" />
       <PasswordField fx:id="password" layoutX="27.0" layoutY="213.0" prefHeight="27.0" prefWidth="200.0" promptText="Key" />
-      <Label fx:id="key" layoutX="32.0" layoutY="294.0" text="Key">
+      <Label fx:id="key" layoutX="26.0" layoutY="294.0" prefHeight="14.0" prefWidth="200.0">
          <font>
             <Font size="11.0" />
          </font>
       </Label>
-      <Button layoutX="236.0" layoutY="287.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="66.0" text="Get key" />
+      <Button layoutX="223.0" layoutY="287.0" mnemonicParsing="false" onAction="#handleKeydownload" prefHeight="27.0" prefWidth="79.0" text="Save key" />
       <Label layoutX="15.0" layoutY="6.0" text="Strongbox" />
+      <Button layoutX="244.0" layoutY="333.0" mnemonicParsing="false" onAction="#Reset" text="Reset" />
     </children>
 </AnchorPane>

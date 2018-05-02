@@ -107,7 +107,8 @@ public class State {
     public void flush (){
         if(cipherMode == DECRYPT_MODE){
            System.out.print("Decrypt mode enabled...\n");
-           System.out.print("Target set to ...\n" + target.toPath().toString());
+           this.direction = "Decryption";
+          // System.out.print("Target set to ...\n" + target.toPath().toString());
            this.target = new File(input.toPath().toString() + ".dec");
            System.out.print("Target set to ...\n" + target.toPath().toString());
            this.setKeylength();

@@ -36,9 +36,9 @@ public class Crypto {
        
 	 try {
              
-               Randompass keyr = new Randompass();
+               //Randompass keyr = new Randompass();
     
-               session.setKey(keyr.generateToken(session.keylen()));
+               
                int cipherMode = session.cipherMode();
                //String key = "This is a secret";
               // File inputFile = session.getInput();

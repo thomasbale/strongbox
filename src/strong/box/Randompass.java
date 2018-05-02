@@ -28,7 +28,9 @@ public class Randompass {
    public synchronized String generateToken(int length) {
        this.fixKeyLength();
                long longToken = Math.abs( random.nextLong() );
+               
                String random = Long.toString(longToken,length);
+               random = String.format("0x%08X", longToken);
                System.out.println(random);
                return (random);
         }
