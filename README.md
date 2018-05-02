@@ -1,5 +1,5 @@
 
-![alt text](strongbox/images/Strongbox_logo.png)
+![Strongbox](https://github.com/thomasbale/strongbox/blob/master/images/Strongbox_logo.png?raw=true)
 
 # strongbox
 Java based graphical application for simple document encryption
