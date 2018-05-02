@@ -24,7 +24,7 @@ public class State {
     private String method;
     private String direction = "Encryption";
     //  Secret key/seed
-    private String key;
+    private String key = null;
     // key length based on method
     private int keylength = 0;
     private File target;
@@ -84,6 +84,10 @@ public class State {
         return this.target;
     }
     
+    public String getMethod(){
+        return method;
+    }
+    
     public String direction(){
         return direction;
     }
@@ -140,7 +144,7 @@ public class State {
     
     public void key(){
         Randompass key = new Randompass();
-        this.key = key.generateToken(8);
+        this.key = key.generateToken(this.keylength);
     }
     
     public void setTarget(File target){
@@ -149,11 +153,11 @@ public class State {
     
     private void setKeylength(){    
       switch(method){
-      case  "DES" : this.keylength = 7;break;
+      case  "DES" : this.keylength = 16; this.method = "DES";break;
       case  "AES" : this.keylength = 16;break;
-      case  "DESede" : this.keylength = 18;break;
-      case  "RSA" : this.keylength = 18;break;
-      default : this.keylength = 7;
+      case  "DESede" : this.keylength = 16;break;
+      case  "RSA" : this.keylength = 16;break;
+      default : this.keylength = 16;
         }
     }
       

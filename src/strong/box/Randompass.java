@@ -26,11 +26,12 @@ public class Randompass {
    protected static SecureRandom random = new SecureRandom();
    
    public synchronized String generateToken(int length) {
-       this.fixKeyLength();
+      // this.fixKeyLength();
                long longToken = Math.abs( random.nextLong() );
                
                String random = Long.toString(longToken,length);
                random = String.format("0x%08X", longToken);
+               random = random.substring(0, Math.min(random.length(), length));
                System.out.println(random);
                return (random);
         }

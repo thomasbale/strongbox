@@ -50,7 +50,8 @@ public class Crypto {
               //int cipherMode = Cipher.ENCRYPT_MODE;
               File inputFile = session.getInput();
               //File outputFile = new File(session.getInput().toPath().toString() + ".dec");
-              String key = "This is a secret";
+              session.key();
+              String key = session.getKey();
              
                       
 	       Key secretKey = new SecretKeySpec(key.getBytes(), "AES");

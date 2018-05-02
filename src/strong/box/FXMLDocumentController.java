@@ -36,6 +36,7 @@ import static javax.crypto.Cipher.ENCRYPT_MODE;
 public class FXMLDocumentController implements Initializable {
     //  Selected file needs to be visible to whole of controller
     File selectedFile;
+    //  Location where user wants to save key once encrypted
     File savedkey;
     //  Holds session state data
     State session = new State();
@@ -112,6 +113,7 @@ public class FXMLDocumentController implements Initializable {
     
     private void saveKey(){
         if(savedkey == null){
+            this.showInformation("Error", "Cannot save to this location");
             return;
         }
         
@@ -129,7 +131,7 @@ public class FXMLDocumentController implements Initializable {
         session.reset();
         assert session.getKey() == null;
         this.initInstructions();
-        this.showSecuritywarning("Key saved " +savedkey.toPath().toString() +".txt"+ "\n All local keys now cleared and ciphers reset.");
+        this.showSecuritywarning("Key saved: " +savedkey.toPath().toString() +".txt"+ "\n All local keys now cleared and ciphers reset." + "\nKeep key safe as file lost without key!");
         return;
         }
         
@@ -150,19 +152,24 @@ public class FXMLDocumentController implements Initializable {
         try{
             TimeUnit.SECONDS.sleep(1);
             key.setText(session.getKey());
+            password.setText(session.getKey());
         } catch(InterruptedException e){}
         status.setText("Encryption complete " );
     }
     
     @FXML
     private void decryptFile(ActionEvent event) {
-        Randompass keyr = new Randompass();
         if(selectedFile == null){
             this.showInformation("Error", "Please select a file");
             return;
         }
+        //  Always clear ciphers
         session.reset();
         session.setKey(this.getPassword());
+        if(session.getKey() == null || session.getKey().equals("")){
+            this.showInformation("Error", "Please enter valid decryption key");
+            return;
+        }
         startProcess(selectedFile,DECRYPT_MODE);
         
         try{
@@ -185,14 +192,16 @@ public class FXMLDocumentController implements Initializable {
         try {
             if(Crypto.fileProcessor(session)){
                 System.out.println("Success");
-                this.showInformation(session.direction() + " complete \n", "Success " + selectedFile.getName() + session.direction() + " with level: " + method.getValue().toString());
+                this.showInformation(session.direction() + " complete\n", "Output: " + selectedFile.getName()+ " " + session.direction() + "\nLevel: " + method.getValue().toString()+ " \nKey: " + session.getKey());
                 instruction.setText("Completed " + session.direction() +" of " + selectedFile.getName());
+                password.setText("");
             }
             
             else{
                 System.out.println("Failure");
                 this.showInformation(session.direction() + " complete", "failure");
                 instruction.setText("Unable to complete " + session.direction() +"of " + selectedFile.getName());
+                password.setText("");
             }
             }
          
@@ -206,6 +215,7 @@ public class FXMLDocumentController implements Initializable {
         assert session.getKey() == null;
         this.initInstructions();
         this.showSecuritywarning("All keys cleared and ciphers reset");
+        password.setText("");
         return;
     }
 
@@ -226,7 +236,7 @@ public class FXMLDocumentController implements Initializable {
     
     //This wil update the combobox when the combobox is changed
     public void comboBoxwasUpdated(){
-       session.method(method.getValue().toString());
+      // session.method(method.getValue().toString());
   
     }
     
@@ -251,7 +261,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void initInstructions(){
-        status.setText("File: " );
+        status.setText("Select a file: " );
         instruction.setText("Select file and method" );
         key.setText("");
         password.setText("");
