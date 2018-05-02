@@ -23,7 +23,7 @@
       <Button layoutX="237.0" layoutY="139.0" mnemonicParsing="false" onAction="#handleUploadedFile" prefHeight="27.0" prefWidth="66.0" text="File" />
       <ChoiceBox fx:id="method" accessibleText="Method" layoutX="27.0" layoutY="212.0" onDragDetected="#comboBoxwasUpdated" onDragDone="#comboBoxwasUpdated" prefHeight="27.0" prefWidth="200.0" />
       <PasswordField fx:id="password" layoutX="27.0" layoutY="250.0" prefHeight="27.0" prefWidth="200.0" promptText="Key" />
-      <Label fx:id="key" layoutX="26.0" layoutY="294.0" prefHeight="14.0" prefWidth="200.0">
+      <Label fx:id="key" layoutX="22.0" layoutY="377.0" prefHeight="14.0" prefWidth="200.0">
          <font>
             <Font size="11.0" />
          </font>

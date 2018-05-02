@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package strong.box;
 
 /**
@@ -28,60 +23,39 @@ import javax.crypto.spec.SecretKeySpec;
 public class Crypto {
 
    static Boolean fileProcessor(State session){
-       
+
        if(session.isReady()==false){
            System.out.print("Session not ready abort");
+           // will cause caller to break out
            return false;
        }
-       
+
 	 try {
-             
-               //Randompass keyr = new Randompass();
-    
-               
-               int cipherMode = session.cipherMode();
-               //String key = "This is a secret";
-              // File inputFile = session.getInput();
-               File outputFile = session.getTarget();
-               
-               //byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-               //IvParameterSpec ivspec = new IvParameterSpec(iv);
-               
-              //int cipherMode = Cipher.ENCRYPT_MODE;
-              File inputFile = session.getInput();
-              //File outputFile = new File(session.getInput().toPath().toString() + ".dec");
-              session.key();
-              String key = session.getKey();
-             
-                      
-	       Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
-               
-	       Cipher cipher = Cipher.getInstance("AES");       
-               cipher.init(cipherMode, secretKey);
-          
-                                                  
-               
-	       FileInputStream inputStream = new FileInputStream(inputFile);
-	       byte[] inputBytes = new byte[(int) inputFile.length()];
-	       inputStream.read(inputBytes);
-
-	       byte[] outputBytes = cipher.doFinal(inputBytes);
-
-	       FileOutputStream outputStream = new FileOutputStream(outputFile);
-	       outputStream.write(outputBytes);
-
-	       inputStream.close();
-	       outputStream.close();
-               
-        
-
-	    } catch (/*InvalidAlgorithmParameterException | */NoSuchPaddingException | NoSuchAlgorithmException
-                     | InvalidKeyException | BadPaddingException
-	             | IllegalBlockSizeException | IOException e) {
-		e.printStackTrace();
+        int cipherMode = session.cipherMode();
+        File outputFile = session.getTarget();
+        File inputFile = session.getInput();
+        //  Generates the key on the fly and saves to session. This is done once per attempted encryption.
+        session.key();
+        String key = session.getKey();
+        //  Due to JRE versioning issues AES is the only method which can be safely defaulted. Change below to session.method() to import user selection in live version
+	      Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
+	      Cipher cipher = Cipher.getInstance("AES");
+        //  initialise the live cipher
+        cipher.init(cipherMode, secretKey);
+        //  ready to write to file
+	      FileInputStream inputStream = new FileInputStream(inputFile);
+	      byte[] inputBytes = new byte[(int) inputFile.length()];
+	      inputStream.read(inputBytes);
+	      byte[] outputBytes = cipher.doFinal(inputBytes);
+	      FileOutputStream outputStream = new FileOutputStream(outputFile);
+        outputStream.write(outputBytes);
+        //  Clean up
+        inputStream.close();
+        outputStream.close();
+        /* add InvalidAlgorithmParameterException if using padding | */
+	    } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | IOException e) {
+      System.out.print("Session not ready abort"); return false;
             }
          return true;
      }
-
-
 }
