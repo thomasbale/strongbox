@@ -30,7 +30,7 @@ public class Crypto {
    static Boolean fileProcessor(State session){
        
        if(session.isReady()==false){
-           System.out.print("session not ready abort");
+           System.out.print("Session not ready abort");
            return false;
        }
        

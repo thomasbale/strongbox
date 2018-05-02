@@ -5,26 +5,25 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDetected="#comboBoxwasUpdated" prefHeight="601.0" prefWidth="337.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="strong.box.FXMLDocumentController">
     <children>
-      <Button layoutX="201.0" layoutY="250.0" mnemonicParsing="false" onAction="#encryptFile" text="Encrypt" />
-      <Button layoutX="200.0" layoutY="213.0" mnemonicParsing="false" onAction="#decryptFile" text="Decrypt" />
-      <Label fx:id="status" layoutX="27.0" layoutY="400.0" minHeight="16" minWidth="69" prefHeight="93.0" prefWidth="192.0" text="Status" />
-      <Text layoutX="27.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Method" />
-        <Label fx:id="instruction" layoutX="27.0" layoutY="14.0" minHeight="16" minWidth="69" text="Instruction -&gt;" />
-      <Button layoutX="27.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleUploadedFile" text="File" />
-      <ChoiceBox fx:id="method" layoutX="29.0" layoutY="123.0" onDragDetected="#comboBoxwasUpdated" onDragDone="#comboBoxwasUpdated" prefWidth="150.0" />
-      <PasswordField fx:id="password" layoutX="27.0" layoutY="213.0" promptText="Password" />
-      <Label fx:id="key" layoutX="32.0" layoutY="256.0" text="Label">
+      <Button layoutX="236.0" layoutY="173.0" mnemonicParsing="false" onAction="#encryptFile" text="Encrypt" />
+      <Button layoutX="236.0" layoutY="213.0" mnemonicParsing="false" onAction="#decryptFile" text="Decrypt" />
+      <Label fx:id="status" layoutX="26.0" layoutY="82.0" minHeight="16" minWidth="69" prefHeight="38.0" prefWidth="192.0" text="Status" />
+      <Text layoutX="32.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Method" />
+        <Label fx:id="instruction" layoutX="127.0" layoutY="424.0" minHeight="16" minWidth="69" text="Instruction -&gt;" />
+      <Button layoutX="237.0" layoutY="87.0" mnemonicParsing="false" onAction="#handleUploadedFile" prefHeight="27.0" prefWidth="66.0" text="File" />
+      <ChoiceBox fx:id="method" accessibleText="Method" layoutX="27.0" layoutY="173.0" onDragDetected="#comboBoxwasUpdated" onDragDone="#comboBoxwasUpdated" prefHeight="27.0" prefWidth="200.0" />
+      <PasswordField fx:id="password" layoutX="27.0" layoutY="213.0" prefHeight="27.0" prefWidth="200.0" promptText="Key" />
+      <Label fx:id="key" layoutX="32.0" layoutY="294.0" text="Key">
          <font>
-            <Font size="14.0" />
+            <Font size="11.0" />
          </font>
       </Label>
-      <Button layoutX="29.0" layoutY="301.0" mnemonicParsing="false" text="Download key" />
-      <Region layoutX="26.0" layoutY="251.0" prefHeight="27.0" prefWidth="167.0" />
+      <Button layoutX="236.0" layoutY="287.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="66.0" text="Get key" />
+      <Label layoutX="15.0" layoutY="6.0" text="Strongbox" />
     </children>
 </AnchorPane>

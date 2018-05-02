@@ -85,8 +85,8 @@ public class FXMLDocumentController implements Initializable {
             this.showInformation("Error", "Please select a file");
             return;
         }
+        session.reset();
         startProcess(selectedFile,ENCRYPT_MODE);
-        
         try{
             TimeUnit.SECONDS.sleep(1);
             key.setText(session.getKey());
@@ -101,7 +101,7 @@ public class FXMLDocumentController implements Initializable {
             this.showInformation("Error", "Please select a file");
             return;
         }
-        
+        session.reset();
         startProcess(selectedFile,DECRYPT_MODE);
         
         try{
@@ -124,14 +124,14 @@ public class FXMLDocumentController implements Initializable {
         try {
             if(Crypto.fileProcessor(session)){
                 System.out.println("Success");
-                this.showInformation("Process complete", "success");
+                this.showInformation(session.direction() + " complete \n", "Success " + selectedFile.getName() + " saved with level: " + method.getValue().toString());
+                
             }
             
             else{
                 System.out.println("Failure");
-                this.showInformation("Process complete", "failure");
+                this.showInformation(session.direction() + " complete", "failure");
             }
-    
             }
          
         catch (Exception ex) {
@@ -159,7 +159,7 @@ public class FXMLDocumentController implements Initializable {
     private void showSecuritywarning(String message){
     //  This warns users that their JRE doesn't support full RSA encryption above 128 and that algorithms will be truncated 
     Alert alert = new Alert(AlertType.WARNING);
-    alert.setTitle("Strongbox warning");
+    alert.setTitle("Strongbox");
     alert.setHeaderText("Security Alert");
     alert.setContentText(message);
     alert.show();
@@ -190,7 +190,7 @@ public class FXMLDocumentController implements Initializable {
         // Warn if restricted crypto present
         
     }else{
-        System.out.print("Fatal:Security exception program aborted");
+        System.out.print("Fatal: Security exception program aborted");
         System.exit(0);
     }    
     }     

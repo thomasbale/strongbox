@@ -21,9 +21,10 @@ public class State {
     private Boolean encryption = true;
     private int cipherMode = ENCRYPT_MODE;
     //  Encryption method
-    private String method = "AES";
+    private String method;
+    private String direction = "Encryption";
     //  Secret key/seed
-    private String key = "This is a secret";
+    private String key;
     // key length based on method
     private int keylength = 0;
     private File target;
@@ -31,10 +32,8 @@ public class State {
     
 
     public void init(){
-
-        
         System.out.print("Initialised session with method: " + method + "...\n");
-        System.out.print("Initialised session with default key: " + key + "...\n");
+        System.out.print("Initialised session with  key: " + key + "...\n");
         System.out.print("Initialised session with mode: " + cipherMode + "...\n");
         System.out.print("Initialised session with keylength: " + keylength + "...\n");
     }
@@ -53,7 +52,7 @@ public class State {
         
         System.out.print("UPDATED: ...\n");
         System.out.print("Initialised session with method: " + method + "...\n");
-        System.out.print("Initialised session with default key: " + key + "...\n");
+        System.out.print("Initialised session with key: " + key + "...\n");
         System.out.print("Initialised session with mode: " + cipherMode + "...\n");
         System.out.print("Initialised session with keylength: " + keylength + "...\n");
         
@@ -85,8 +84,18 @@ public class State {
         return this.target;
     }
     
+    public String direction(){
+        return direction;
+    }
+    
     public void setMode(Boolean encryption){
+        if(ready == true){
+            return;
+        }
         this.encryption = encryption;
+        if(encryption == false){
+            direction = "Decryption"; 
+        }
         this.flush();
     }
     
@@ -102,10 +111,30 @@ public class State {
            this.target = new File(input.toPath().toString() + ".dec");
            System.out.print("Target set to ...\n" + target.toPath().toString());
            this.setKeylength();
+           this.checkReady();
            return;
         }
         this.target = new File(input.toPath().toString() + ".enc");
         this.setKeylength();
+        this.checkReady();
+        return;
+    }
+    
+    public void reset(){
+    ready = false;
+    encryption = true;
+    cipherMode = ENCRYPT_MODE;
+    method = null;
+    key = null;
+    keylength = 0;
+    target = null;
+    }
+    
+    private void checkReady(){
+        if(method != null && keylength != 0 && input != null && target != null){
+            ready = true;
+        }
+        return;
     }
     
     public void key(){
@@ -117,15 +146,14 @@ public class State {
         this.target = target;
     }
     
-    private void setKeylength(){
-        
+    private void setKeylength(){    
       switch(method){
       case  "DES" : this.keylength = 7;break;
       case  "AES" : this.keylength = 16;break;
       case  "DESede" : this.keylength = 18;break;
       case  "RSA" : this.keylength = 18;break;
       default : this.keylength = 7;
-    }
+        }
     }
       
     public void setKey(String key){
