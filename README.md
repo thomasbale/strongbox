@@ -7,6 +7,10 @@ Java based graphical application for simple document encryption
 ## Overview of assignment
   I set out to build an encryption application for desktop using JavaFX and Scenebuilder with NetBeans IDE. The application utilises Java.Crypto and Java.security to generate passwords and access ciphers. The project has been challenging given I had little knowledge of cryptography prior to starting so it has been both a Java Graphics and Crypto assignment!
 
+### Notes on compiling
+  There are source files within the src folder and a jar executable within the dist folder. The project was built with netbeans so nbproject folder is retained.
+
+
 ## Purpose
   Simple file encryption software that gives the user granular control over type of file encryption.
 
